@@ -82,7 +82,7 @@ abstract class ModelChildForm extends \BaseFormDoctrine
     {
       $this->widgetSchema[$this->saveTrigger] = new \sfWidgetFormInputCheckbox(array('label' => $this->getSaveTriggerLabel()));
       $this->validatorSchema[$this->saveTrigger] = new \sfValidatorBoolean(array('required' => false));
-      $this->defaults[$this->saveTrigger] = true;
+      $this->defaults[$this->saveTrigger] = $this->object->isNew() ? false : true;
     }
   }
   
