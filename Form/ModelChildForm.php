@@ -9,6 +9,7 @@ abstract class ModelChildForm extends \BaseFormDoctrine
 {
   protected $saveTrigger = 'save_it';
   protected $collectionsToClear = array();
+  protected $isModel = false;
   
   public function setup()
   {
@@ -61,6 +62,16 @@ abstract class ModelChildForm extends \BaseFormDoctrine
     return $this->getObject();
   }
   
+  public function isModel()
+  {
+    return $this->isModel;
+  }
+  
+  public function setIsModel($value)
+  {
+    $this->isModel = (boolean) $value;
+  }
+  
   protected function updateAction()
   {
     $this->object->parentUpdate();
@@ -100,45 +111,5 @@ abstract class ModelChildForm extends \BaseFormDoctrine
   protected function getSaveTriggerLabel()
   {
     return $this->object->__toString();
-  }
-  
-  public function offsetGet($name)
-  {
-    if (!isset($this->formFields[$name]))
-    {
-      if (!$widget = $this->widgetSchema[$name])
-      {
-        throw new \InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
-      }
-
-      if ($this->isBound)
-      {
-        $value = isset($this->taintedValues[$name]) ? $this->taintedValues[$name] : null;
-      }
-      else if (isset($this->defaults[$name]))
-      {
-        $value = $this->defaults[$name];
-      }
-      else
-      {
-        $value = $widget instanceof \sfWidgetFormSchema ? $widget->getDefaults() : $widget->getDefault();
-      }
-
-      if ($widget instanceof \sfWidgetFormSchema)
-      {
-        $class = 'Jg\Form\Field\FormFieldSchema';
-        $form = $this->getEmbeddedForm($name);
-      }
-      else
-      {
-        $class = 'Jg\Form\Field\FormField';
-        $form = $this;
-      }
-
-      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, $value, $this->errorSchema[$name]);
-      $this->formFields[$name]->setForm($form);
-    }
-
-    return $this->formFields[$name];
   }
 }
