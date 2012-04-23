@@ -84,7 +84,7 @@ abstract class ModelChildForm extends \BaseFormDoctrine
   
   protected function canUpdateObject($values)
   {
-    return $this->saveTrigger && isset($values[$this->saveTrigger]) && $values[$this->saveTrigger];
+    return !$this->isModel && $this->saveTrigger && isset($values[$this->saveTrigger]) && $values[$this->saveTrigger];
   }
   
   protected function configureSaveTrigger()
