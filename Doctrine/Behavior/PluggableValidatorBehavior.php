@@ -27,7 +27,15 @@ class PluggableValidatorBehavior extends \Doctrine_Template
       $invoker_holder->pluggable_validators = array();
     }
     
-    $invoker_holder->pluggable_validators[] = $validator;
+    $invoker_holder->pluggable_validators[$validator::IDENTIFIER] = $validator;
+  }
+  
+  public function removeValidator($validator_identifier)
+  {
+    $invoker_holder = $this->getHolder();
+    if (isset($invoker_holder->pluggable_validators[$validator_identifier])) {
+      unset($invoker_holder->pluggable_validators[$validator_identifier]);
+    }
   }
   
   public function setTableDefinition()
