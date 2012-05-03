@@ -70,6 +70,10 @@ abstract class ModelChildForm extends \BaseFormDoctrine
   public function setIsModel($value)
   {
     $this->isModel = (boolean) $value;
+    
+    if ($this->saveTrigger) {
+      $this->defaults[$this->saveTrigger] = false;
+    }
   }
   
   protected function updateAction()
@@ -84,7 +88,7 @@ abstract class ModelChildForm extends \BaseFormDoctrine
   
   protected function canUpdateObject($values)
   {
-    return !$this->isModel && $this->saveTrigger && isset($values[$this->saveTrigger]) && $values[$this->saveTrigger];
+    return $this->saveTrigger && isset($values[$this->saveTrigger]) && $values[$this->saveTrigger];
   }
   
   protected function configureSaveTrigger()
