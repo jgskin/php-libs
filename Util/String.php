@@ -16,4 +16,19 @@ class String
     
     return $str;
   }
+  
+  /*
+  * Verifica se o valor está formatado como um inteiro válido
+  */
+  static public function validInt($value)
+  {
+    $clean = intval($value);
+
+    if (strval($clean) != $value)
+    {
+      return false;
+    }
+    
+    return true;
+  }
 }
