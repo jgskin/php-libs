@@ -147,12 +147,19 @@ class ValidatorSchema extends \sfValidatorSchema
     {
       $errorSchema->addError($e);
     }
-    
+
     foreach ($clean as $name => $value)
     {
       if($validator->fields[$name] instanceof \sfValidatorSchema) 
       {
-        $clean[$name] = self::doPostCleanLoop($validator->fields[$name], $value);
+	try
+	{
+	  $clean[$name] = self::doPostCleanLoop($validator->fields[$name], $value);
+	}
+	catch (\sfValidatorError $e)
+	{
+	  $errorSchema->addError($e, (string) $name);
+	}
       } 
     }
     
