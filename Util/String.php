@@ -16,6 +16,17 @@ class String
     
     return $str;
   }
+
+  static function blank($str)
+  {
+    $str = trim($str);
+    return empty($str);
+  }
+
+  static function hasOnlyNumbers($str)
+  {
+    return preg_match('/^\d*$/', $str);
+  }
   
   /*
   * Verifica se o valor está formatado como um inteiro válido
