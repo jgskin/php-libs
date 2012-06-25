@@ -43,47 +43,71 @@ class String
     return true;
   }
   
-  //Desenvolvedor: Marcelo Bom Jardim
-  //Email: suporte@onzehost.net
-  //Site: www.onzehost.net
   static function validCPF($cpf) {
-    $soma = 0;
-       
-    if (strlen($cpf) <> 11) {
-      return false;      
-    }
 
-       
-    // Verifica 1º digito      
-    for ($i = 0; $i < 9; $i++) {         
-      $soma += (($i+1) * $cpf[$i]);
-    }
- 
-    $d1 = ($soma % 11);
-       
-    if ($d1 == 10) {
-      $d1 = 0;
-    }
-       
-    $soma = 0;
-       
-    // Verifica 2º digito
-    for ($i = 9, $j = 0; $i > 0; $i--, $j++) {
-      $soma += ($i * $cpf[$j]);
-    }
-       
-    $d2 = ($soma % 11);
-       
-    if ($d2 == 10) {
-      $d2 = 0;
-    }      
-       
-    if ($d1 == $cpf[9] && $d2 == $cpf[10]) {
-      return true;
-    }
-    else {
+    if(!is_numeric($cpf)) {
       return false;
     }
+
+    //VERIFICA
+    if( ($cpf == '11111111111') || ($cpf == '22222222222') ||
+        ($cpf == '33333333333') || ($cpf == '44444444444') ||
+        ($cpf == '55555555555') || ($cpf == '66666666666') ||
+        ($cpf == '77777777777') || ($cpf == '88888888888') ||
+        ($cpf == '99999999999') || ($cpf == '00000000000') ) {
+      return false;
+    }
+
+    //PEGA O DIGITO VERIFIACADOR
+    $dv_informado = substr($cpf, 9,2);
+
+    for($i=0; $i<=8; $i++) {
+      $digito[$i] = substr($cpf, $i,1);
+    }
+
+    //CALCULA O VALOR DO 10º DIGITO DE VERIFICAÇÂO
+    $posicao = 10;
+    $soma = 0;
+
+    for($i=0; $i<=8; $i++) {
+      $soma = $soma + $digito[$i] * $posicao;
+      $posicao = $posicao - 1;
+    }
+
+    $digito[9] = $soma % 11;
+
+    if($digito[9] < 2) {
+      $digito[9] = 0;
+    } else {
+      $digito[9] = 11 - $digito[9];
+    }
+
+    //CALCULA O VALOR DO 11º DIGITO DE VERIFICAÇÃO
+    $posicao = 11;
+    $soma = 0;
+
+    for ($i=0; $i<=9; $i++) {
+      $soma = $soma + $digito[$i] * $posicao;
+      $posicao = $posicao - 1;
+    }
+
+    $digito[10] = $soma % 11;
+
+    if ($digito[10] < 2) {
+      $digito[10] = 0; 
+    } else {
+      $digito[10] = 11 - $digito[10];
+    }
+
+    //VERIFICA SE O DV CALCULADO É IGUAL AO INFORMADO
+    $dv = $digito[9] * 10 + $digito[10];
+    if ($dv != $dv_informado) {
+      $status = false;
+    } else {
+      $status = true;
+    }
+
+    return $status;
   }
   
   //Desenvolvedor: Marcelo Bom Jardim
