@@ -12,6 +12,17 @@ class TemplateErrors
     return self::buildErrors($form->getErrorSchema(), $form, $title);
   }
 
+  static function getFieldLabel($form, $key)
+  {
+    if (isset($form[$key])) {
+      if (!$label = $form->getWidget($key)->getLabel()) {
+        return $form->getWidgetSchema()->getFormFormatter()->generateLabelName($key);
+      } 
+    }
+
+    return null;
+  }
+
   static protected function buildErrors($errors, $form, $title = null)
   {
     $info = array();
@@ -27,17 +38,13 @@ class TemplateErrors
         try {
           $info['next'][] = self::buildErrors($error, $form->getEmbeddedForm($key));
         } catch (\InvalidArgumentException $e) {
-          throw new RuntimeException("Misconfiguration of error form");
+          $title = self::getFieldLabel($form, $key);
+          $info['next'][] = self::buildErrors($error, $form, $title ? $title : 'Geral');
         }
       } else {
         $info['errors'][$key]['message'] = $error->getMessage();
 
-        if (isset($form[$key])) {
-          if (!$label = $form->getWidget($key)->getLabel())
-          {
-            $label = $form->getWidgetSchema()->getFormFormatter()->generateLabelName($key);
-          }
-
+        if ($label = self::getFieldLabel($form, $key)) {
           $info['errors'][$key]['label'] = $label;
         } 
       }

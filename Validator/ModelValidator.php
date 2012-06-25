@@ -8,9 +8,6 @@ class ModelValidator extends \sfValidatorSchema
     $this->addRequiredOption('form');
   }
 
-  /*
-   * Validação do modelo
-   */
   protected function doClean($value)
   {
     $modelo = $this->getForm()->getObject();
@@ -19,19 +16,26 @@ class ModelValidator extends \sfValidatorSchema
 
     if ($modelo->getErrorStack()->count())
     {
-      $erros = array();
-      foreach ($modelo->getErrorStack()->toArray() as $k => $error)
-      {
-        $erro = new \sfValidatorError($this, implode(', ', \Hcrm::translateErrorCodes($modelo, $error)));
-        if ($this->getOption('throw_global_error'))
-        {
-          throw $erro;
+      $validator_errors = array();
+      foreach ($modelo->getErrorStack() as $k => $errors) {
+        foreach ($errors as $error) {
+          $validator_error = new \sfValidatorError($this, $error);
+
+          if ($this->getOption('throw_global_error')) {
+            throw $validator_error;
+          }
+          
+          $validator_errors[] = $validator_error;
         }
 
-        $erros[$k] = $erro;
+        if (count($validator_errors) > 1) {
+          $error_schema[$k] = new \sfValidatorErrorSchema($this, $validator_errors);
+        } else {
+          $error_schema[$k] = reset($validator_errors);
+        }
       }
 
-      throw new \sfValidatorErrorSchema($this, $erros);
+      throw new \sfValidatorErrorSchema($this, $error_schema);
     }
 
     return $value;
