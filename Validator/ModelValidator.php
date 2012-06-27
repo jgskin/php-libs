@@ -16,8 +16,12 @@ class ModelValidator extends \sfValidatorSchema
 
     if ($modelo->getErrorStack()->count())
     {
-      $validator_errors = array();
+      $error_schema = array();
+
       foreach ($modelo->getErrorStack() as $k => $errors) {
+
+        $validator_errors = array();
+
         foreach ($errors as $error) {
           $validator_error = new \sfValidatorError($this, $error);
 
@@ -33,6 +37,7 @@ class ModelValidator extends \sfValidatorSchema
         } else {
           $error_schema[$k] = reset($validator_errors);
         }
+
       }
 
       throw new \sfValidatorErrorSchema($this, $error_schema);
