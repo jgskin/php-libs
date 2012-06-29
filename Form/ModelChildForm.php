@@ -38,6 +38,17 @@ abstract class ModelChildForm extends \BaseFormDoctrine
     $modelName = str_replace('Form', '', $modelName);
     return $modelName;
   }
+
+  protected function doUpdateObject($values)
+  {
+    foreach (array_keys($values) as $key) {
+      if ($this->object->hasReference($key)) {
+        unset($values[$key]);
+      }
+    }
+
+    parent::doUpdateObject($values);
+  }
   
   public function updateObject($values = null)
   {
