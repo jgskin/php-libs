@@ -1,0 +1,8 @@
+{
+    "name": "jgskin/php-libs",
+    "autoload": {
+        "psr-0": {
+            "Jg": "src/"
+        }
+    }
+}
