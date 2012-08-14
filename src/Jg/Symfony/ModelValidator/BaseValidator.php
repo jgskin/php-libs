@@ -39,6 +39,26 @@ abstract class BaseValidator
   public function __construct(\sfDoctrineRecord $subject)
   {
     $this->subject = $subject;
+
+    //validate the declared validators
+    foreach ($this->validators as $validator) {
+      //a validator should be an array of validations
+      if (!is_array($validator)) {
+        throw new InvalidConfigException("the validator should be an array of validations, please check the declared validators");
+      }
+
+      //check validation existence
+      foreach ($validator as $validation) {
+        if (!is_string($validation) || !method_exists($this, 'validate' . ucfirst($validation))) {
+          throw new InvalidConfigException("Declared validation doesn't exists");
+        }
+      }
+    }
+
+    //check the configuration
+    foreach ($this->configuration as $validator_name) {
+      $this->checkValidator($validator_name);
+    }
   }
 
   /**
@@ -67,7 +87,7 @@ abstract class BaseValidator
 
     if (in_array($validator_name, $this->configuration)) {
       //disable the validator
-      unset($this->configuration[]);
+      unset($this->configuration[$validator_name]);
     }
   }
 
@@ -95,12 +115,12 @@ abstract class BaseValidator
   final protected function checkValidator($validator_name)
   {
     if (!is_string($validator_name)) {
-      throw new ValidatorInvalidConfigException("The validator name must be a string");
+      throw new InvalidConfigException("The validator name must be a string");
     }
 
     if (!array_key_exists($validator_name, $this->validators)) {
       //validator does not exist, throw a exception
-      throw new ValidatorInvalidConfigException("Validator $validator_name was not found");
+      throw new InvalidConfigException("Validator '$validator_name' was not found");
     }
   }
 
@@ -130,7 +150,7 @@ abstract class BaseValidator
       foreach ($this->validators[$validator_name] as $validation) {
         //execute the validation if it was not executed yet
         if (!in_array($validation, $executed)) {
-          $validation_method = 'validate' . capitalize($validation);
+          $validation_method = 'validate' . ucfirst($validation);
 
           // The validation method must be in the valitor class. Should it be changed?
           //execute it
