@@ -20,21 +20,31 @@ abstract class UpdatableForm extends ModelRootForm
     self::updateFormsChain($this, $values);
   }
   
+  /**
+   * Create new forms by values received from POST
+   *
+   * Update the embedded forms creating new forms based in the form collection
+   * updateForm method and the values received from POST
+   *
+   * @param \sfForm $parent the parent form
+   * @param array $values the post values
+   */
   static protected function updateFormsChain($parent, $values)
   {
+    //get the embedded forms who received a post value
     $keysToUpdate = self::getFormKeysToUpdate($parent, $values);
     
-    foreach ($keysToUpdate as $key) 
-    {
+    foreach ($keysToUpdate as $key) {
+      //get form to update
       $form = $parent->getEmbeddedForm($key);
-      if (method_exists($form, 'updateForm')) 
-      {
+
+      //if the form is updatable, update it
+      if (method_exists($form, 'updateForm')) {
         $form->updateForm($values[$key]);
       }
-      else 
-      {
-        self::updateFormsChain($form, $values[$key]);
-      }
+
+      //keep searching the embeddedforms for update cases
+      self::updateFormsChain($form, $values[$key]);
     }
   }
   
