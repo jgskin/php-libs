@@ -1,2 +1,8 @@
 #emacs ignore
 *~
+
+#vendor libs
+vendor/*
+
+#composer
+composer.lock

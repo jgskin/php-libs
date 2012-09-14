@@ -1,8 +1,21 @@
 {
     "name": "jgskin/php-libs",
+    "description": "my daily base php libs",
     "autoload": {
         "psr-0": {
             "Jg": "src/"
         }
+    },
+
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.symfony-project.com",
+            "vendor-alias": "symfony-old"
+        }
+    ],
+
+    "require": {
+        "symfony-old/symfony": "1.4.18"
     }
 }
