@@ -12,14 +12,27 @@ class TemplateErrors
     return self::buildErrors($form->getErrorSchema(), $form, $title);
   }
 
+  /**
+   * Get the field label if defined, if not generates one
+   *
+   * @param \sfForm  The parent form
+   * @param string|integer  The field key 
+   * @return string|null The field label
+   */
   static function getFieldLabel($form, $key)
-  {
+  { 
+    // The field really exists?
     if (isset($form[$key])) {
+      // A label was define?
       if (!$label = $form->getWidget($key)->getLabel()) {
-        return $form->getWidgetSchema()->getFormFormatter()->generateLabelName($key);
-      } 
+        $label = $form->getWidgetSchema()->getFormFormatter()->generateLabelName($key);
+      }
+
+      // Here, take this label
+      return $label;
     }
 
+    // we could not find the field. humm...
     return null;
   }
 
