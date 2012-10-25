@@ -12,17 +12,17 @@
             "type": "package",
             "package": {
                 "name": "symfony-old/symfony",
-                "version": "1.4.18",
+                "version": "1.4.19",
                 "source": {
                     "type": "svn",
                     "url": "http://svn.symfony-project.com/",
-                    "reference": "tags/RELEASE_1_4_18/"
+                    "reference": "tags/RELEASE_1_4_19/"
                 }
             }
         }
     ],
 
     "require": {
-        "symfony-old/symfony": "1.4.18"
+        "symfony-old/symfony": "1.4.19"
     }
 }
