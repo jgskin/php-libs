@@ -8,6 +8,7 @@ use \Jg\Form\Field\FormField;
 abstract class ModelChildForm extends \BaseFormDoctrine
 {
   protected $saveTrigger = 'save_it';
+  // relats to rebuild on save (needed for relat deletion)
   protected $collectionsToClear = array();
   protected $isModel = false;
   
@@ -112,6 +113,9 @@ abstract class ModelChildForm extends \BaseFormDoctrine
     }
   }
   
+  /**
+   * Clear the configured $collectionsToClear related to the form object
+   */
   protected function clearChildrenEntities()
   {
     if ($this->collectionsToClear) 
